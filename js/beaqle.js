@@ -609,7 +609,11 @@ $.extend({ alert: function (message, title) {
 
     // ###################################################################
     ListeningTest.prototype.startTests = function() {
-        
+        // Resume the audio context in case it's been paused due to the
+        // user not performing an operation before we created it
+        // https://goo.gl/7K7WLu
+        this.audioPool.waContext.resume();
+
         // init linear test sequence
         this.TestState.TestSequence = Array();
         for (var i = 0; i < this.TestConfig.Testsets.length; i++)
