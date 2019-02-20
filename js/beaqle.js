@@ -429,18 +429,6 @@ $.extend({ alert: function (message, title) {
             "AudioLoadError": false
         }
 
-
-        // create and configure audio pool
-        this.audioPool = new AudioPool('AudioPool');
-        this.audioPool.register();
-        this.audioPool.onTimeUpdate = $.proxy(this.audioTimeCallback, this);
-        this.audioPool.onError = $.proxy(this.audioErrorCallback, this);
-        this.audioPool.onDataLoaded = $.proxy(this.audioLoadedCallback, this);
-        this.audioPool.setLooped(this.TestConfig.LoopByDefault);
-        this.audioPool.setAutoReturn(this.TestConfig.AutoReturnByDefault);
-
-        this.checkBrowserFeatures();
-
         // show introduction div
         $('#TestTitle').html(this.TestConfig.TestName);
         $('#TestIntroduction').show();
@@ -605,6 +593,24 @@ $.extend({ alert: function (message, title) {
             this.TestState.CurrentTest = this.TestState.CurrentTest-1;
         	this.runTest(this.TestState.TestSequence[this.TestState.CurrentTest]);
         }
+    }
+
+
+    // ###################################################################
+    ListeningTest.prototype.initAudio = function() {
+        // create and configure audio pool
+        // In versions of chrome > 71 this has to be done in response to
+        // a user action in order to be able to play audio (https://goo.gl/7K7WLu)
+        // Call this method before calling startTests
+        this.audioPool = new AudioPool('AudioPool');
+        this.audioPool.register();
+        this.audioPool.onTimeUpdate = $.proxy(this.audioTimeCallback, this);
+        this.audioPool.onError = $.proxy(this.audioErrorCallback, this);
+        this.audioPool.onDataLoaded = $.proxy(this.audioLoadedCallback, this);
+        this.audioPool.setLooped(this.TestConfig.LoopByDefault);
+        this.audioPool.setAutoReturn(this.TestConfig.AutoReturnByDefault);
+
+        this.checkBrowserFeatures();
     }
 
     // ###################################################################
